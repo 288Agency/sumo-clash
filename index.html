@@ -58,10 +58,10 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 <script>
 (() => {
 /* ================= Config Supabase ================= */
-const SB_URL='https://kuzwqmbqyxlgytqnahpr.supabase.co';
-const SB_KEY='sb_publishable_1j5nPAQZgDL74IlV5pF7rg_-tXH0vgt';
+const SB_URL='';
+const SB_KEY='';
 let sb=null;
-function getSb(){ if(!sb) sb=window.supabase.createClient(SB_URL,SB_KEY,{realtime:{params:{eventsPerSecond:40}}}); return sb; }
+function getSb(){ if(!SB_URL) throw new Error('no backend'); if(!sb) sb=window.supabase.createClient(SB_URL,SB_KEY,{realtime:{params:{eventsPerSecond:40}}}); return sb; }
 
 const cv=document.getElementById('c'), ctx=cv.getContext('2d');
 const overlay=document.getElementById('overlay');
@@ -355,7 +355,7 @@ function openRoom(code,asHost){
   try{ history.replaceState(null,'','#'+code); }catch(e){ try{location.hash=code;}catch(_){} }
   renderOnlineLobby();
   let client;
-  try{ client=getSb(); }catch(e){ netStatus='Impossible de charger Supabase'; renderOnlineLobby(); return; }
+  try{ client=getSb(); }catch(e){ netStatus='Mode en ligne désactivé (aucun serveur configuré)'; renderOnlineLobby(); return; }
   ch=client.channel('sumo-'+code,{config:{broadcast:{self:false,ack:false},presence:{key:cid}}});
   ch.on('broadcast',{event:'hello'},({payload})=>{ if(mode==='host') onHello(payload); });
   ch.on('broadcast',{event:'lobby'},({payload})=>{ if(mode==='client') onLobby(payload); });
